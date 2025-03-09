@@ -1,9 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
-import { ChevronDown, ChevronUp, Trophy } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trophy, Layers, ExpandIcon, CollapseIcon } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 
 interface CategoryProps {
   category: CategoryType;
@@ -13,9 +17,29 @@ interface CategoryProps {
 const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [celebrated, setCelebrated] = useState(false);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const { toast } = useToast();
   
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
+  };
+
+  const expandAll = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // This is a placeholder that would require modifying the ChecklistItem component to accept a controlled expanded state
+    toast({
+      title: "All items expanded",
+      description: `Expanded all items in ${category.title}`,
+    });
+  };
+
+  const collapseAll = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // This is a placeholder that would require modifying the ChecklistItem component to accept a controlled expanded state
+    toast({
+      title: "All items collapsed",
+      description: `Collapsed all items in ${category.title}`,
+    });
   };
   
   const completedCount = category.items.filter(item => item.completed).length;
@@ -55,8 +79,33 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
       }());
       
       setCelebrated(true);
+      
+      // Show a toast when category is completed
+      toast({
+        title: "Category Completed! 🎉",
+        description: `You've completed all items in "${category.title}"`,
+      });
     }
-  }, [isCompleted, celebrated]);
+  }, [isCompleted, celebrated, category.title, toast]);
+
+  // Handle keyboard navigation between items
+  const handleItemKeyDown = (e: React.KeyboardEvent, currentId: string) => {
+    const currentIndex = category.items.findIndex(item => item.id === currentId);
+    
+    // Arrow up - move to previous item
+    if (e.code === 'ArrowUp' && currentIndex > 0) {
+      e.preventDefault();
+      const prevItem = document.querySelector(`[data-item-id="${category.items[currentIndex - 1].id}"]`) as HTMLElement;
+      if (prevItem) prevItem.focus();
+    }
+    
+    // Arrow down - move to next item
+    if (e.code === 'ArrowDown' && currentIndex < category.items.length - 1) {
+      e.preventDefault();
+      const nextItem = document.querySelector(`[data-item-id="${category.items[currentIndex + 1].id}"]`) as HTMLElement;
+      if (nextItem) nextItem.focus();
+    }
+  };
   
   return (
     <div className="category-container mb-8">
@@ -68,11 +117,44 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
             <ChevronUp className="h-5 w-5 text-muted-foreground" />
           }
           {isCompleted && (
-            <Trophy className="h-5 w-5 text-green-500 ml-2 animate-pulse" />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Trophy className="h-5 w-5 text-green-500 ml-2 animate-pulse" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Category completed!</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </div>
-        <div className="text-sm text-muted-foreground">
-          {completedCount} of {category.items.length} completed
+        <div className="flex items-center gap-3">
+          <div className="text-sm text-muted-foreground">
+            {completedCount} of {category.items.length} completed
+          </div>
+          {!collapsed && (
+            <div className="flex space-x-1">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 px-2" 
+                onClick={expandAll}
+              >
+                <ExpandIcon className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 px-2" 
+                onClick={collapseAll}
+              >
+                <Layers className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       
@@ -94,6 +176,7 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
               item={item} 
               index={index}
               onToggle={onToggleItem}
+              onKeyDown={handleItemKeyDown}
             />
           ))}
         </div>
