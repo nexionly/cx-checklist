@@ -6,14 +6,16 @@ import Category from '@/components/Category';
 import SaveOptions from '@/components/SaveOptions';
 import ScrollIndicator from '@/components/ScrollIndicator';
 import { useToast } from '@/hooks/use-toast';
-import { BarChart2, Info, ExternalLink } from 'lucide-react';
+import { BarChart2, Info, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const Index = () => {
   const [checklist, setChecklist] = useState<Checklist | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isGettingStartedOpen, setIsGettingStartedOpen] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -140,13 +142,30 @@ const Index = () => {
       />
       
       <div className="checklist-container px-4 pb-2">
-        <div className="bg-white border border-gray-100 rounded-xl p-6 mb-8 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="bg-blue-50 p-2 rounded-full h-10 w-10 flex items-center justify-center flex-shrink-0">
-              <Info className="h-5 w-5 text-blue-500" />
+        <Collapsible
+          open={isGettingStartedOpen}
+          onOpenChange={setIsGettingStartedOpen}
+          className="bg-white border border-gray-100 rounded-xl mb-8 shadow-sm transition-all duration-200"
+        >
+          <div className="flex items-center justify-between p-4 cursor-pointer">
+            <div className="flex items-center gap-4">
+              <div className="bg-blue-50 p-2 rounded-full h-10 w-10 flex items-center justify-center flex-shrink-0">
+                <Info className="h-5 w-5 text-blue-500" />
+              </div>
+              <h2 className="text-xl font-medium text-gray-800">Getting Started</h2>
             </div>
-            <div>
-              <h2 className="text-xl font-medium text-gray-800 mb-3">Getting Started</h2>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="sm" className="p-0 hover:bg-transparent">
+                {isGettingStartedOpen ? 
+                  <ChevronUp className="h-5 w-5 text-gray-500" /> : 
+                  <ChevronDown className="h-5 w-5 text-gray-500" />
+                }
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+          
+          <CollapsibleContent className="px-4 pb-6">
+            <div className="ml-14">
               <p className="text-gray-600 leading-relaxed mb-4">
                 This checklist is your actionable guide to building a high-performing CX team from the ground up. 
                 It's designed to help you systematically consider all the critical elements, from defining your strategic vision 
@@ -157,8 +176,8 @@ const Index = () => {
                 <span>Your progress is saved locally in your browser.</span>
               </div>
             </div>
-          </div>
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
       
       <div className="checklist-container px-4 pb-24">
