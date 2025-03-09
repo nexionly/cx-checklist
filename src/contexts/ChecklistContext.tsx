@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { initialChecklist, Checklist } from '@/lib/checklistData';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { Json } from '@/integrations/supabase/types';
 
 type ChecklistContextType = {
   checklist: Checklist | null;
@@ -49,10 +50,15 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Cast to Checklist after validation
-      const checklistData = data.checklist_data as any;
-      if (checklistData && typeof checklistData === 'object' && 
-          'title' in checklistData && 'categories' in checklistData) {
-        return checklistData as Checklist;
+      const checklistData = data.checklist_data as Json;
+      if (
+        checklistData && 
+        typeof checklistData === 'object' && 
+        'title' in checklistData && 
+        'categories' in checklistData
+      ) {
+        // First cast to unknown then to Checklist to avoid direct type conversion error
+        return checklistData as unknown as Checklist;
       }
       return null;
     } catch (err) {
@@ -130,12 +136,15 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
         throw error;
       }
 
+      // Cast Checklist to Json type for Supabase
+      const checklistDataJson = checklistData as unknown as Json;
+
       if (data?.id) {
         // Update existing record
         const { error: updateError } = await supabase
           .from('checklist_progress')
           .update({ 
-            checklist_data: checklistData as any,
+            checklist_data: checklistDataJson,
             last_updated: new Date().toISOString()
           })
           .eq('id', data.id);
@@ -147,7 +156,7 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
           .from('checklist_progress')
           .insert([{
             user_id: user.id,
-            checklist_data: checklistData as any
+            checklist_data: checklistDataJson
           }]);
 
         if (insertError) throw insertError;

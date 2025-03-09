@@ -4,6 +4,7 @@ import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
 import confetti from 'canvas-confetti';
 import { useToast } from '@/hooks/use-toast';
+// Fix the import path to use the correct casing
 import CategoryHeader from './category/CategoryHeader';
 
 interface CategoryProps {
