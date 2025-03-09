@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { initialChecklist, Checklist } from '@/lib/checklistData';
 import Header from '@/components/Header';
