@@ -4,6 +4,7 @@ import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
 import { ChevronDown, ChevronUp, Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { cn } from '@/lib/utils';
 
 interface CategoryProps {
   category: CategoryType;
