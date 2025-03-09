@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { initialChecklist, Checklist } from '@/lib/checklistData';
 import Header from '@/components/Header';
@@ -16,9 +15,7 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Simulate loading from storage
     setTimeout(() => {
-      // Try to get saved checklist from localStorage
       const savedChecklist = localStorage.getItem('cx-checklist');
       if (savedChecklist) {
         try {
@@ -51,7 +48,6 @@ const Index = () => {
 
     setChecklist(updatedChecklist);
     
-    // Save to localStorage with each toggle
     localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
   };
 
@@ -110,16 +106,8 @@ const Index = () => {
     <div className="min-h-screen">
       <Header 
         title="Customer Experience Essentials Checklist"
-        subtitle="Track and manage your customer experience initiatives with this interactive checklist."
+        subtitle="This checklist is your actionable guide to building a high-performing CX team from the ground up. It's designed to help you systematically consider all the critical elements, from defining your strategic vision to implementing the right processes and tools across Onboarding, Support, Customer Success, and more."
       />
-      
-      <div className="max-w-4xl mx-auto px-4 mb-8">
-        <div className="bg-slate-50 border border-slate-100 rounded-lg p-5 text-center animate-fade-in">
-          <p className="text-slate-700 leading-relaxed">
-            This checklist is your actionable guide to building a high-performing CX team from the ground up. It's designed to help you systematically consider all the critical elements, from defining your strategic vision to implementing the right processes and tools across Onboarding, Support, Customer Success, and more.
-          </p>
-        </div>
-      </div>
       
       <div className="checklist-container px-4 pb-24">
         <div className="bg-white border border-gray-100 rounded-xl p-4 mb-8 shadow-sm animate-scale-in">
