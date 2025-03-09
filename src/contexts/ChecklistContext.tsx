@@ -48,7 +48,13 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
         return null;
       }
 
-      return data.checklist_data as Checklist;
+      // Cast to Checklist after validation
+      const checklistData = data.checklist_data as any;
+      if (checklistData && typeof checklistData === 'object' && 
+          'title' in checklistData && 'categories' in checklistData) {
+        return checklistData as Checklist;
+      }
+      return null;
     } catch (err) {
       console.error('Exception fetching checklist:', err);
       setError('An unexpected error occurred while loading your checklist.');
@@ -129,7 +135,7 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
         const { error: updateError } = await supabase
           .from('checklist_progress')
           .update({ 
-            checklist_data: checklistData,
+            checklist_data: checklistData as any,
             last_updated: new Date().toISOString()
           })
           .eq('id', data.id);
@@ -139,10 +145,10 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
         // Insert new record
         const { error: insertError } = await supabase
           .from('checklist_progress')
-          .insert({
+          .insert([{
             user_id: user.id,
-            checklist_data: checklistData
-          });
+            checklist_data: checklistData as any
+          }]);
 
         if (insertError) throw insertError;
       }
