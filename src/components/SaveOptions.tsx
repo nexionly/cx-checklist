@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Checklist } from '@/lib/checklistData';
 import { Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SaveOptionsProps {
   checklist: Checklist;
@@ -31,24 +32,29 @@ const SaveOptions: React.FC<SaveOptionsProps> = ({ checklist, onSave }) => {
   };
   
   return (
-    <div className="flex items-center justify-center gap-2 py-4 sticky bottom-0 z-10 bg-background/80 backdrop-blur-sm">
-      <Button 
-        variant="default" 
-        onClick={handleSave} 
-        disabled={saveLoading}
-        className="flex items-center gap-2"
-      >
-        {saveLoading ? (
-          <>
-            <span className="animate-pulse">Saving...</span>
-          </>
-        ) : (
-          <>
-            <Save className="h-4 w-4" />
-            <span>Save Progress</span>
-          </>
-        )}
-      </Button>
+    <div className="fixed bottom-8 left-8 z-10">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="default" 
+              onClick={handleSave} 
+              disabled={saveLoading}
+              className="h-14 w-14 rounded-full flex items-center justify-center shadow-md hover:shadow-lg p-0"
+              aria-label="Save progress"
+            >
+              {saveLoading ? (
+                <span className="animate-pulse h-6 w-6 rounded-full bg-white"></span>
+              ) : (
+                <Save className="h-6 w-6" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="top">
+            <p>Save Progress</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 };
