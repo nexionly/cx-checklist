@@ -3,16 +3,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChecklistItem as ChecklistItemType } from '@/lib/checklistData';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, Zap, HelpCircle, BookOpen, CheckCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Zap, HelpCircle, BookOpen } from 'lucide-react';
 
 interface ChecklistItemProps {
   item: ChecklistItemType;
   index: number;
+  categoryId: string;
   onToggle: (id: string) => void;
   onKeyDown?: (e: React.KeyboardEvent, id: string) => void;
 }
 
-const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, index, onToggle, onKeyDown }) => {
+const ChecklistItem: React.FC<ChecklistItemProps> = ({ 
+  item, 
+  index, 
+  categoryId,
+  onToggle, 
+  onKeyDown 
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
@@ -49,6 +56,31 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, index, onToggle, on
     }
   };
 
+  // Listen for expand/collapse all events
+  useEffect(() => {
+    const handleExpandAll = (e: CustomEvent) => {
+      if (e.detail.categoryId === categoryId) {
+        setExpanded(true);
+      }
+    };
+
+    const handleCollapseAll = (e: CustomEvent) => {
+      if (e.detail.categoryId === categoryId) {
+        setExpanded(false);
+      }
+    };
+
+    // Add event listeners
+    document.addEventListener('expand-all-items', handleExpandAll as EventListener);
+    document.addEventListener('collapse-all-items', handleCollapseAll as EventListener);
+
+    // Clean up event listeners
+    return () => {
+      document.removeEventListener('expand-all-items', handleExpandAll as EventListener);
+      document.removeEventListener('collapse-all-items', handleCollapseAll as EventListener);
+    };
+  }, [categoryId]);
+
   return (
     <div 
       ref={itemRef}
@@ -60,6 +92,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, index, onToggle, on
       style={{ '--item-index': index } as React.CSSProperties}
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      data-item-id={item.id}
     >
       <div 
         className={cn(
@@ -74,11 +107,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, index, onToggle, on
             onCheckedChange={handleCheckboxChange}
             className="h-5 w-5"
           />
-          {showCheck && (
-            <CheckCircle 
-              className="absolute -top-1 -left-1 h-7 w-7 text-green-500 animate-scale-in"
-            />
-          )}
+          {/* We've removed the overlapping CheckCircle icon that was causing visual issues */}
         </div>
         <div className="flex-grow">
           <div className="flex justify-between">

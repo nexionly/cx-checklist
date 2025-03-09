@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
 import { ChevronDown, ChevronUp, Trophy, Layers, ExpandIcon, ListCollapse } from 'lucide-react';
@@ -18,6 +19,7 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
   const [celebrated, setCelebrated] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const { toast } = useToast();
+  const initialRenderRef = useRef(true);
   
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -25,7 +27,13 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
 
   const expandAll = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // This is a placeholder that would require modifying the ChecklistItem component to accept a controlled expanded state
+    
+    // Emit a custom event that child ChecklistItem components will listen for
+    const event = new CustomEvent('expand-all-items', {
+      detail: { categoryId: category.id }
+    });
+    document.dispatchEvent(event);
+    
     toast({
       title: "All items expanded",
       description: `Expanded all items in ${category.title}`,
@@ -34,7 +42,13 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
 
   const collapseAll = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // This is a placeholder that would require modifying the ChecklistItem component to accept a controlled expanded state
+    
+    // Emit a custom event that child ChecklistItem components will listen for
+    const event = new CustomEvent('collapse-all-items', {
+      detail: { categoryId: category.id }
+    });
+    document.dispatchEvent(event);
+    
     toast({
       title: "All items collapsed",
       description: `Collapsed all items in ${category.title}`,
@@ -46,6 +60,12 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
   const isCompleted = completedCount === category.items.length && category.items.length > 0;
   
   useEffect(() => {
+    // Skip confetti on first render (page load)
+    if (initialRenderRef.current) {
+      initialRenderRef.current = false;
+      return;
+    }
+    
     // Trigger confetti when a category is fully completed and hasn't been celebrated yet
     if (isCompleted && !celebrated) {
       const duration = 1.5 * 1000; // Reduced to half the time (from 3 seconds to 1.5 seconds)
@@ -174,6 +194,7 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
               key={item.id} 
               item={item} 
               index={index}
+              categoryId={category.id}
               onToggle={onToggleItem}
               onKeyDown={handleItemKeyDown}
             />
