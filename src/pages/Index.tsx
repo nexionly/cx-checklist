@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { initialChecklist, Checklist } from '@/lib/checklistData';
 import Header from '@/components/Header';
@@ -5,7 +6,7 @@ import Category from '@/components/Category';
 import SaveOptions from '@/components/SaveOptions';
 import ScrollIndicator from '@/components/ScrollIndicator';
 import { useToast } from '@/hooks/use-toast';
-import { BarChart2 } from 'lucide-react';
+import { BarChart2, Info } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
@@ -54,6 +55,34 @@ const Index = () => {
   const handleSave = () => {
     if (!checklist) return;
     localStorage.setItem('cx-checklist', JSON.stringify(checklist));
+  };
+  
+  const handleUncheckAll = (categoryId: string) => {
+    if (!checklist) return;
+    
+    const updatedChecklist = {
+      ...checklist,
+      categories: checklist.categories.map(category => {
+        if (category.id === categoryId) {
+          return {
+            ...category,
+            items: category.items.map(item => ({
+              ...item,
+              completed: false
+            }))
+          };
+        }
+        return category;
+      })
+    };
+    
+    setChecklist(updatedChecklist);
+    localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
+    
+    toast({
+      title: "Items unchecked",
+      description: "All items in this category have been unchecked",
+    });
   };
 
   const calculateProgress = () => {
@@ -109,6 +138,23 @@ const Index = () => {
         subtitle="This checklist is your actionable guide to building a high-performing CX team from the ground up. It's designed to help you systematically consider all the critical elements, from defining your strategic vision to implementing the right processes and tools across Onboarding, Support, Customer Success, and more."
       />
       
+      <div className="checklist-container px-4 pb-2">
+        <div className="bg-white border border-gray-100 rounded-xl p-5 mb-8 shadow-sm">
+          <div className="flex items-start gap-3 mb-2">
+            <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                This checklist is organized into key categories to help you build a comprehensive CX function. Check off items as you implement them to track your progress.
+              </p>
+              <div className="flex items-center gap-2 bg-amber-50 p-2 rounded-md text-sm text-amber-700 border border-amber-100">
+                <Info className="h-4 w-4" />
+                <span>Your progress is saved locally in your browser.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="checklist-container px-4 pb-24">
         <div className="bg-white border border-gray-100 rounded-xl p-4 mb-8 shadow-sm animate-scale-in">
           <div className="flex items-center justify-between mb-2">
@@ -134,6 +180,7 @@ const Index = () => {
             key={category.id} 
             category={category} 
             onToggleItem={handleToggleItem}
+            onUncheckAll={handleUncheckAll}
           />
         ))}
       </div>

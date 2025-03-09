@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
-import { ChevronDown, ChevronUp, Trophy, Layers, ExpandIcon, ListCollapse } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trophy, ExpandIcon, ListCollapse, XCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,10 @@ import { useToast } from '@/hooks/use-toast';
 interface CategoryProps {
   category: CategoryType;
   onToggleItem: (itemId: string) => void;
+  onUncheckAll: (categoryId: string) => void;
 }
 
-const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
+const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAll }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [celebrated, setCelebrated] = useState(false);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -53,6 +54,11 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
       title: "All items collapsed",
       description: `Collapsed all items in ${category.title}`,
     });
+  };
+  
+  const handleUncheckAll = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onUncheckAll(category.id);
   };
   
   const completedCount = category.items.filter(item => item.completed).length;
@@ -156,6 +162,25 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
           </div>
           {!collapsed && (
             <div className="flex space-x-1">
+              {completedCount > 0 && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 px-2 opacity-60 hover:opacity-100 transition-opacity" 
+                        onClick={handleUncheckAll}
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      <p>Uncheck all items</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
               <Button 
                 variant="ghost" 
                 size="sm" 
