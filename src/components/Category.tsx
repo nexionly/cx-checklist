@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
@@ -26,7 +25,7 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
   useEffect(() => {
     // Trigger confetti when a category is fully completed and hasn't been celebrated yet
     if (isCompleted && !celebrated) {
-      const duration = 3 * 1000;
+      const duration = 1.5 * 1000; // Reduced to half the time (from 3 seconds to 1.5 seconds)
       const end = Date.now() + duration;
       
       const colors = ['#F2FCE2', '#33C3F0', '#9b87f5', '#0EA5E9'];

@@ -48,9 +48,7 @@ const ScrollIndicator: React.FC = () => {
             strokeLinecap="round"
           />
         </svg>
-        <div className="absolute text-xs font-semibold">
-          {Math.round(scrollPercentage)}%
-        </div>
+        {/* Removed the percentage display */}
       </div>
     </div>
   );
