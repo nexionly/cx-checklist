@@ -1,6 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
-import { initialChecklist, Checklist } from '@/lib/checklistData';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Category from '@/components/Category';
 import SaveOptions from '@/components/SaveOptions';
@@ -11,82 +10,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useChecklist } from '@/contexts/ChecklistContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  const [checklist, setChecklist] = useState<Checklist | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isGettingStartedOpen, setIsGettingStartedOpen] = useState(true);
   const { toast } = useToast();
-
-  useEffect(() => {
-    setTimeout(() => {
-      const savedChecklist = localStorage.getItem('cx-checklist');
-      if (savedChecklist) {
-        try {
-          setChecklist(JSON.parse(savedChecklist));
-        } catch (e) {
-          console.error('Error parsing saved checklist', e);
-          setChecklist(initialChecklist);
-        }
-      } else {
-        setChecklist(initialChecklist);
-      }
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const handleToggleItem = (itemId: string) => {
-    if (!checklist) return;
-
-    const updatedChecklist = {
-      ...checklist,
-      categories: checklist.categories.map(category => ({
-        ...category,
-        items: category.items.map(item => 
-          item.id === itemId 
-            ? { ...item, completed: !item.completed } 
-            : item
-        )
-      }))
-    };
-
-    setChecklist(updatedChecklist);
-    
-    localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
-  };
-
-  const handleSave = () => {
-    if (!checklist) return;
-    localStorage.setItem('cx-checklist', JSON.stringify(checklist));
-  };
-  
-  const handleUncheckAll = (categoryId: string) => {
-    if (!checklist) return;
-    
-    const updatedChecklist = {
-      ...checklist,
-      categories: checklist.categories.map(category => {
-        if (category.id === categoryId) {
-          return {
-            ...category,
-            items: category.items.map(item => ({
-              ...item,
-              completed: false
-            }))
-          };
-        }
-        return category;
-      })
-    };
-    
-    setChecklist(updatedChecklist);
-    localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
-    
-    toast({
-      title: "Items unchecked",
-      description: "All items in this category have been unchecked",
-    });
-  };
+  const { checklist, loading, error, saveChecklist, handleToggleItem, handleUncheckAll } = useChecklist();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const calculateProgress = () => {
     if (!checklist) return 0;
@@ -120,6 +53,20 @@ const Index = () => {
             ))}
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Checklist</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
       </div>
     );
   }
@@ -173,7 +120,20 @@ const Index = () => {
               </p>
               <div className="flex items-center gap-2 bg-amber-50 p-3 rounded-md text-sm text-amber-700 border border-amber-100">
                 <Info className="h-4 w-4" />
-                <span>Your progress is saved locally in your browser.</span>
+                <span>
+                  {user 
+                    ? "Your progress is saved to your account automatically." 
+                    : "Sign in to save your progress across devices."}
+                </span>
+                {!user && (
+                  <Button 
+                    variant="link" 
+                    className="text-amber-700 p-0 h-auto" 
+                    onClick={() => navigate('/auth')}
+                  >
+                    Sign in
+                  </Button>
+                )}
               </div>
             </div>
           </CollapsibleContent>
@@ -233,7 +193,7 @@ const Index = () => {
         </div>
       </div>
       
-      <SaveOptions checklist={checklist} onSave={handleSave} />
+      <SaveOptions checklist={checklist} onSave={saveChecklist} />
       <ScrollIndicator />
     </div>
   );
