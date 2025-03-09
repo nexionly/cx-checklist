@@ -109,9 +109,17 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Header 
-        title={checklist.title}
+        title="Customer Experience Essentials Checklist"
         subtitle="Track and manage your customer experience initiatives with this interactive checklist."
       />
+      
+      <div className="max-w-4xl mx-auto px-4 mb-8">
+        <div className="bg-slate-50 border border-slate-100 rounded-lg p-5 text-center animate-fade-in">
+          <p className="text-slate-700 leading-relaxed">
+            This checklist is your actionable guide to building a high-performing CX team from the ground up. It's designed to help you systematically consider all the critical elements, from defining your strategic vision to implementing the right processes and tools across Onboarding, Support, Customer Success, and more.
+          </p>
+        </div>
+      </div>
       
       <div className="checklist-container px-4 pb-24">
         <div className="bg-white border border-gray-100 rounded-xl p-4 mb-8 shadow-sm animate-scale-in">
