@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import UserMenu from './UserMenu';
-import SyncStatus from './SyncStatus';
 
 interface HeaderProps {
   title: string;
@@ -10,28 +8,17 @@ interface HeaderProps {
   className?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  title, 
-  subtitle,
-  className 
-}) => {
+const Header: React.FC<HeaderProps> = ({ title, subtitle, className }) => {
   return (
-    <header className={cn("text-center px-4 py-8", className)}>
-      <div className="container max-w-4xl mx-auto flex flex-col items-center">
-        <div className="flex items-center justify-between w-full mb-2">
-          <div className="flex-1">
-            <SyncStatus />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-800 flex-1 text-center">{title}</h1>
-          <div className="flex-1 flex justify-end">
-            <UserMenu />
-          </div>
-        </div>
-        
-        {subtitle && (
-          <p className="text-gray-600 max-w-2xl">{subtitle}</p>
-        )}
-      </div>
+    <header className={cn("py-8 text-center", className)}>
+      <h1 className="text-3xl md:text-4xl font-bold mb-2 animate-fade-in">
+        {title}
+      </h1>
+      {subtitle && (
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in">
+          {subtitle}
+        </p>
+      )}
     </header>
   );
 };
