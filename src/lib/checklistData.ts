@@ -1,3 +1,4 @@
+
 export type Priority = 'HIGH' | 'MEDIUM' | 'LOW';
 
 export interface ChecklistItem {
@@ -279,5 +280,32 @@ export const initialChecklist: Checklist = {
         },
         {
           id: "analytics-3",
-8
-
+          title: "Develop CX Reporting & Dashboards",
+          priority: "HIGH",
+          action: "Create dashboards and reports that visualize key CX metrics and trends. Tailor dashboards for different audiences (executive team, team leaders, individual team members).",
+          reason: "Dashboards provide real-time visibility into CX performance and enable proactive monitoring.",
+          insight: "Design dashboards that are visually appealing and easy to understand. Focus on actionable insights, not just data visualization.",
+          completed: false
+        },
+        {
+          id: "analytics-4",
+          title: "Conduct CX Analysis & Insights Generation",
+          priority: "HIGH",
+          action: "Regularly analyze CX data to identify trends, patterns, pain points, and opportunities for improvement. Generate actionable insights and recommendations.",
+          reason: "Data-driven insights are crucial for making informed decisions and optimizing the CX.",
+          insight: "Go beyond descriptive analytics (what happened) to diagnostic (why it happened) and predictive analytics (what will happen).",
+          completed: false
+        },
+        {
+          id: "analytics-5",
+          title: "Drive CX Strategy & Improvement Initiatives",
+          priority: "HIGH",
+          action: "Use CX insights to inform CX strategy, prioritize improvement initiatives, and measure the impact of changes.",
+          reason: "Ensures that CX efforts are data-driven and focused on delivering tangible results.",
+          insight: "CX analytics should be a continuous process, not a one-time project. Embed data-driven decision-making into your CX culture.",
+          completed: false
+        }
+      ]
+    }
+  ]
+};
