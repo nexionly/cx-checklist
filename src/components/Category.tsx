@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
 import ChecklistItem from './ChecklistItem';
-import { ChevronDown, ChevronUp, Trophy, Layers, ExpandIcon, CollapseIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trophy, Layers, ExpandIcon, ListCollapse } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -151,7 +150,7 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem }) => {
                 className="h-8 px-2" 
                 onClick={collapseAll}
               >
-                <Layers className="h-4 w-4" />
+                <ListCollapse className="h-4 w-4" />
               </Button>
             </div>
           )}
