@@ -49,14 +49,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, index, onToggle }) 
             )}>
               {item.title}
             </h3>
-            <div className="flex items-center gap-2">
-              <span className={cn(
-                "tag",
-                item.priority === 'HIGH' ? "tag-high" : 
-                item.priority === 'MEDIUM' ? "tag-medium" : "tag-low"
-              )}>
-                {item.priority}
-              </span>
+            <div>
               {expanded ? 
                 <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />

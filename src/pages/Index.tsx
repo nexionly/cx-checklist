@@ -1,12 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { initialChecklist, Checklist, ChecklistItem } from '@/lib/checklistData';
+import { initialChecklist, Checklist } from '@/lib/checklistData';
 import Header from '@/components/Header';
 import Category from '@/components/Category';
 import SaveOptions from '@/components/SaveOptions';
+import ScrollIndicator from '@/components/ScrollIndicator';
 import { useToast } from '@/hooks/use-toast';
 import { BarChart2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 const Index = () => {
   const [checklist, setChecklist] = useState<Checklist | null>(null);
@@ -122,7 +124,10 @@ const Index = () => {
           </div>
           <div className="h-3 bg-secondary rounded-full overflow-hidden">
             <div 
-              className="h-full bg-primary rounded-full transition-all duration-700 ease-in-out" 
+              className={cn(
+                "h-full rounded-full transition-all duration-700 ease-in-out",
+                progress === 100 ? "bg-green-500" : "bg-primary"
+              )}
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -138,6 +143,7 @@ const Index = () => {
       </div>
       
       <SaveOptions checklist={checklist} onSave={handleSave} />
+      <ScrollIndicator />
     </div>
   );
 };
