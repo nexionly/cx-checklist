@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { initialChecklist, Checklist } from '@/lib/checklistData';
 import Header from '@/components/Header';
@@ -134,18 +135,23 @@ const Index = () => {
     <div className="min-h-screen">
       <Header 
         title="Customer Experience Essentials Checklist"
-        subtitle="This checklist is your actionable guide to building a high-performing CX team from the ground up. It's designed to help you systematically consider all the critical elements, from defining your strategic vision to implementing the right processes and tools across Onboarding, Support, Customer Success, and more."
+        className="bg-gradient-to-r from-blue-50 to-indigo-50 pt-12 pb-10 mb-6 shadow-sm"
       />
       
       <div className="checklist-container px-4 pb-2">
-        <div className="bg-white border border-gray-100 rounded-xl p-5 mb-8 shadow-sm">
-          <div className="flex items-start gap-3 mb-2">
-            <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+        <div className="bg-white border border-gray-100 rounded-xl p-6 mb-8 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="bg-blue-50 p-2 rounded-full h-10 w-10 flex items-center justify-center flex-shrink-0">
+              <Info className="h-5 w-5 text-blue-500" />
+            </div>
             <div>
-              <p className="text-sm text-slate-600 leading-relaxed mb-3">
-                This checklist is organized into key categories to help you build a comprehensive CX function. Check off items as you implement them to track your progress.
+              <h2 className="text-xl font-medium text-gray-800 mb-3">Getting Started</h2>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                This checklist is your actionable guide to building a high-performing CX team from the ground up. 
+                It's designed to help you systematically consider all the critical elements, from defining your strategic vision 
+                to implementing the right processes and tools across Onboarding, Support, Customer Success, and more.
               </p>
-              <div className="flex items-center gap-2 bg-amber-50 p-2 rounded-md text-sm text-amber-700 border border-amber-100">
+              <div className="flex items-center gap-2 bg-amber-50 p-3 rounded-md text-sm text-amber-700 border border-amber-100">
                 <Info className="h-4 w-4" />
                 <span>Your progress is saved locally in your browser.</span>
               </div>
@@ -155,7 +161,7 @@ const Index = () => {
       </div>
       
       <div className="checklist-container px-4 pb-24">
-        <div className="bg-white border border-gray-100 rounded-xl p-4 mb-8 shadow-sm animate-scale-in">
+        <div className="bg-white border border-gray-100 rounded-xl p-5 mb-8 shadow-sm animate-scale-in">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <BarChart2 className="h-5 w-5 text-primary" />
