@@ -41,7 +41,7 @@ const SaveOptions: React.FC<SaveOptionsProps> = ({ checklist, onSave }) => {
   };
   
   return (
-    <div className="fixed bottom-6 left-6 z-10">
+    <div className="fixed bottom-20 left-6 z-10">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

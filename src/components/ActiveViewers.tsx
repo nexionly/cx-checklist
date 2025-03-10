@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -36,7 +37,7 @@ const ActiveViewers: React.FC<{ className?: string }> = ({ className }) => {
   
   return (
     <div className={cn(
-      "fixed bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md border border-gray-100 flex items-center gap-1.5 text-sm font-medium text-gray-700 transition-opacity animate-fade-in z-50",
+      "fixed bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md border border-gray-100 flex items-center gap-1.5 text-sm font-medium text-gray-700 transition-opacity animate-fade-in z-20",
       className
     )}>
       <Users size={14} className="text-primary" />
