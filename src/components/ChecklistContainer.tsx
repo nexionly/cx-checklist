@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
-import Category from '@/components/Category'; // Updated import path
+import Category from '@/components/Category';
 import ProgressBar from '@/components/ProgressBar';
 import ConsultingCTA from '@/components/ConsultingCTA';
 
