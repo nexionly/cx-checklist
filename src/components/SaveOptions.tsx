@@ -32,7 +32,7 @@ const SaveOptions: React.FC<SaveOptionsProps> = ({ checklist, onSave }) => {
   };
   
   return (
-    <div className="fixed top-4 right-4 z-10">
+    <div className="fixed bottom-8 right-24 z-10">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -50,7 +50,7 @@ const SaveOptions: React.FC<SaveOptionsProps> = ({ checklist, onSave }) => {
               )}
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">
+          <TooltipContent side="top">
             <p>Save Progress</p>
           </TooltipContent>
         </Tooltip>
