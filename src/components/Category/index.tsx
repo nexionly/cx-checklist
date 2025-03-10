@@ -71,7 +71,7 @@ const Category = ({ category, onToggleItem, onUncheckAll }: CategoryProps) => {
     
     // Trigger confetti when a category is fully completed and hasn't been celebrated yet
     if (isCompleted && !celebrated) {
-      const duration = 1.5 * 1000; // Reduced to half the time (from 3 seconds to 1.5 seconds)
+      const duration = 1.5 * 1000; // 1.5 seconds duration
       const end = Date.now() + duration;
       
       const colors = ['#F2FCE2', '#33C3F0', '#9b87f5', '#0EA5E9'];
