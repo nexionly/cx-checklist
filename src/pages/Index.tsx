@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { initialChecklist, Checklist } from '@/lib/checklistData';
 import Header from '@/components/Header';
 import Category from '@/components/Category';
 import SaveOptions from '@/components/SaveOptions';
 import ScrollIndicator from '@/components/ScrollIndicator';
+import ActiveViewers from '@/components/ActiveViewers';
 import { useToast } from '@/hooks/use-toast';
 import { BarChart2, Info, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -209,7 +209,6 @@ const Index = () => {
           />
         ))}
         
-        {/* CTA Section */}
         <div className="mt-12 mb-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl overflow-hidden shadow-lg animate-fade-in">
           <div className="p-8 md:p-10 text-center md:text-left md:flex items-center justify-between">
             <div className="mb-6 md:mb-0 md:mr-8">
@@ -235,6 +234,7 @@ const Index = () => {
       
       <SaveOptions checklist={checklist} onSave={handleSave} />
       <ScrollIndicator />
+      <ActiveViewers />
     </div>
   );
 };
