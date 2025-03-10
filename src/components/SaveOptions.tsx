@@ -32,7 +32,7 @@ const SaveOptions: React.FC<SaveOptionsProps> = ({ checklist, onSave }) => {
   };
   
   return (
-    <div className="fixed bottom-8 left-8 z-10">
+    <div className="fixed top-4 right-4 z-10">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -40,17 +40,17 @@ const SaveOptions: React.FC<SaveOptionsProps> = ({ checklist, onSave }) => {
               variant="default" 
               onClick={handleSave} 
               disabled={saveLoading}
-              className="h-14 w-14 rounded-full flex items-center justify-center shadow-md hover:shadow-lg p-0"
+              className="h-10 w-10 rounded-full flex items-center justify-center shadow-md hover:shadow-lg p-0"
               aria-label="Save progress"
             >
               {saveLoading ? (
                 <span className="animate-pulse h-6 w-6 rounded-full bg-white"></span>
               ) : (
-                <Save className="h-6 w-6" />
+                <Save className="h-5 w-5" />
               )}
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="top">
+          <TooltipContent side="left">
             <p>Save Progress</p>
           </TooltipContent>
         </Tooltip>
