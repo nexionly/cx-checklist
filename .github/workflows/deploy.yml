@@ -31,10 +31,12 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
-      - name: Install dependencies
+      - name: Clean install dependencies
         run: |
-          echo "Installing dependencies..."
-          npm ci
+          echo "Removing existing node_modules and package-lock.json to ensure clean install..."
+          rm -rf node_modules package-lock.json
+          echo "Installing dependencies with npm install..."
+          npm install
           echo "Dependencies installed successfully"
         
       - name: Debug environment
@@ -44,6 +46,8 @@ jobs:
           echo "Current directory: $(pwd)"
           echo "Files in current directory:"
           ls -la
+          echo "Package.json dependencies:"
+          cat package.json | grep -A 20 '"dependencies"'
           
       - name: Build application
         run: |
