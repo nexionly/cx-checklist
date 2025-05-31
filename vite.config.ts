@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => ({
     sourcemap: false,
     minify: 'esbuild',
     target: 'esnext',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: undefined,
