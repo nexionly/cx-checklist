@@ -9,12 +9,12 @@
     <meta name="author" content="Lovable" />
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/lovable-uploads/0df88fe6-f553-4e89-947f-9a9315c68ad3.png" />
+    <link rel="icon" type="image/png" href="./lovable-uploads/0df88fe6-f553-4e89-947f-9a9315c68ad3.png" />
     
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="Customer Experience Essentials Checklist" />
     <meta property="og:description" content="Your actionable guide to building a high-performing CX team from the ground up" />
-    <meta property="og:image" content="/lovable-uploads/bc423a57-6799-4c80-a2f6-d8a2ef92d1df.png" />
+    <meta property="og:image" content="./lovable-uploads/bc423a57-6799-4c80-a2f6-d8a2ef92d1df.png" />
     <meta property="og:type" content="website" />
   </head>
 
@@ -23,5 +23,21 @@
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Debug script for GitHub Pages -->
+    <script>
+      console.log('GitHub Pages Debug - Current URL:', window.location.href);
+      console.log('GitHub Pages Debug - Base URL:', document.baseURI);
+      
+      // Check if React app loads
+      setTimeout(() => {
+        const root = document.getElementById('root');
+        if (root && root.children.length === 0) {
+          console.error('React app failed to mount - root element is empty after 2 seconds');
+        } else {
+          console.log('React app appears to have mounted successfully');
+        }
+      }, 2000);
+    </script>
   </body>
 </html>
