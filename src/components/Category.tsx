@@ -1,11 +1,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Category as CategoryType } from '@/lib/checklistData';
-import { CategoryHeader } from './Category/CategoryHeader';
-import { CategoryProgress } from './Category/CategoryProgress';
-import { CategoryItems } from './Category/CategoryItems';
+import { ChevronDown, ChevronUp, Trophy, ExpandIcon, ListCollapse, XCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ChecklistItem as ChecklistItemType } from '@/lib/checklistData';
+import ChecklistItem from '@/components/ChecklistItem';
 import confetti from 'canvas-confetti';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 interface CategoryProps {
   category: CategoryType;
@@ -110,31 +113,121 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
     }
   }, [isCompleted, celebrated, category.title, toast]);
 
+  // Handle keyboard navigation between items
+  const handleItemKeyDown = (e: React.KeyboardEvent, currentId: string) => {
+    const currentIndex = category.items.findIndex(item => item.id === currentId);
+    
+    // Arrow up - move to previous item
+    if (e.code === 'ArrowUp' && currentIndex > 0) {
+      e.preventDefault();
+      const prevItem = document.querySelector(`[data-item-id="${category.items[currentIndex - 1].id}"]`) as HTMLElement;
+      if (prevItem) prevItem.focus();
+    }
+    
+    // Arrow down - move to next item
+    if (e.code === 'ArrowDown' && currentIndex < category.items.length - 1) {
+      e.preventDefault();
+      const nextItem = document.querySelector(`[data-item-id="${category.items[currentIndex + 1].id}"]`) as HTMLElement;
+      if (nextItem) nextItem.focus();
+    }
+  };
+
   return (
     <div className="category-container mb-8">
-      <CategoryHeader 
-        title={category.title}
-        collapsed={collapsed}
-        toggleCollapse={toggleCollapse}
-        isCompleted={isCompleted}
-        completedCount={completedCount}
-        totalItems={category.items.length}
-        onExpandAll={expandAll}
-        onCollapseAll={collapseAll}
-        onUncheckAll={handleUncheckAll}
-      />
+      {/* Category Header */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={toggleCollapse}>
+          <h2 className="text-xl font-semibold">{category.title}</h2>
+          {collapsed ? 
+            <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+          }
+          {isCompleted && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Trophy className="h-5 w-5 text-green-500 ml-2 animate-pulse" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Category completed!</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="text-sm text-muted-foreground">
+            {completedCount} of {category.items.length} completed
+          </div>
+          {!collapsed && (
+            <div className="flex space-x-1">
+              {completedCount > 0 && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 px-2 opacity-60 hover:opacity-100 transition-opacity" 
+                        onClick={handleUncheckAll}
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                      <p>Uncheck all items</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 px-2" 
+                onClick={expandAll}
+              >
+                <ExpandIcon className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 px-2" 
+                onClick={collapseAll}
+              >
+                <ListCollapse className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
       
-      <CategoryProgress 
-        progress={progress} 
-        isCompleted={isCompleted} 
-      />
-      
-      {!collapsed && (
-        <CategoryItems 
-          items={category.items} 
-          categoryId={category.id}
-          onToggle={onToggleItem}
+      {/* Category Progress */}
+      <div className="h-2 bg-secondary rounded-full mb-4 overflow-hidden">
+        <div 
+          className={cn(
+            "h-full rounded-full transition-all duration-500 ease-in-out",
+            isCompleted ? "bg-green-500" : "bg-primary"
+          )}
+          style={{ width: `${progress}%` }}
         />
+      </div>
+      
+      {/* Category Items */}
+      {!collapsed && (
+        <div className="space-y-1">
+          {category.items.map((item, index) => (
+            <ChecklistItem 
+              key={item.id} 
+              item={item} 
+              index={index}
+              categoryId={category.id}
+              onToggle={onToggleItem}
+              onKeyDown={handleItemKeyDown}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
