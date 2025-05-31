@@ -4,7 +4,6 @@ import { Category as CategoryType } from '@/lib/checklistData';
 import { ChevronDown, ChevronUp, Trophy, ExpandIcon, ListCollapse, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ChecklistItem as ChecklistItemType } from '@/lib/checklistData';
 import ChecklistItem from '@/components/ChecklistItem';
 import confetti from 'canvas-confetti';
 import { useToast } from '@/hooks/use-toast';
@@ -29,7 +28,6 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
   const expandAll = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Emit a custom event that child ChecklistItem components will listen for
     const event = new CustomEvent('expand-all-items', {
       detail: { categoryId: category.id }
     });
@@ -44,7 +42,6 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
   const collapseAll = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Emit a custom event that child ChecklistItem components will listen for
     const event = new CustomEvent('collapse-all-items', {
       detail: { categoryId: category.id }
     });
@@ -66,15 +63,13 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
   const isCompleted = completedCount === category.items.length && category.items.length > 0;
   
   useEffect(() => {
-    // Skip confetti on first render (page load)
     if (initialRenderRef.current) {
       initialRenderRef.current = false;
       return;
     }
     
-    // Trigger confetti when a category is fully completed and hasn't been celebrated yet
     if (isCompleted && !celebrated) {
-      const duration = 1.5 * 1000; // Reduced to half the time (from 3 seconds to 1.5 seconds)
+      const duration = 1.5 * 1000;
       const end = Date.now() + duration;
       
       const colors = ['#F2FCE2', '#33C3F0', '#9b87f5', '#0EA5E9'];
@@ -105,7 +100,6 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
       
       setCelebrated(true);
       
-      // Show a toast when category is completed
       toast({
         title: "Category Completed! 🎉",
         description: `You've completed all items in "${category.title}"`,
@@ -113,18 +107,15 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
     }
   }, [isCompleted, celebrated, category.title, toast]);
 
-  // Handle keyboard navigation between items
   const handleItemKeyDown = (e: React.KeyboardEvent, currentId: string) => {
     const currentIndex = category.items.findIndex(item => item.id === currentId);
     
-    // Arrow up - move to previous item
     if (e.code === 'ArrowUp' && currentIndex > 0) {
       e.preventDefault();
       const prevItem = document.querySelector(`[data-item-id="${category.items[currentIndex - 1].id}"]`) as HTMLElement;
       if (prevItem) prevItem.focus();
     }
     
-    // Arrow down - move to next item
     if (e.code === 'ArrowDown' && currentIndex < category.items.length - 1) {
       e.preventDefault();
       const nextItem = document.querySelector(`[data-item-id="${category.items[currentIndex + 1].id}"]`) as HTMLElement;
@@ -134,7 +125,6 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
 
   return (
     <div className="category-container mb-8">
-      {/* Category Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 cursor-pointer" onClick={toggleCollapse}>
           <h2 className="text-xl font-semibold">{category.title}</h2>
@@ -203,7 +193,6 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
         </div>
       </div>
       
-      {/* Category Progress */}
       <div className="h-2 bg-secondary rounded-full mb-4 overflow-hidden">
         <div 
           className={cn(
@@ -214,7 +203,6 @@ const Category: React.FC<CategoryProps> = ({ category, onToggleItem, onUncheckAl
         />
       </div>
       
-      {/* Category Items */}
       {!collapsed && (
         <div className="space-y-1">
           {category.items.map((item, index) => (
