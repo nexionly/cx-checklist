@@ -30,22 +30,24 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: undefined,
-        assetFileNames: 'assets/[name].[hash][extname]',
-        chunkFileNames: 'assets/[name].[hash].js',
-        entryFileNames: 'assets/[name].[hash].js',
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name?.split('.') || [];
+          const extType = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+            return `assets/images/[name].[hash][extname]`;
+          }
+          if (/css/i.test(extType)) {
+            return `assets/css/[name].[hash][extname]`;
+          }
+          return `assets/[name].[hash][extname]`;
+        },
+        chunkFileNames: 'assets/js/[name].[hash].js',
+        entryFileNames: 'assets/js/[name].[hash].js',
       },
     },
   },
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
-  experimental: {
-    renderBuiltUrl(filename, { hostType }) {
-      if (hostType === 'js') {
-        return { js: `./assets/${filename}` }
-      } else {
-        return { relative: true }
-      }
-    }
-  }
+  publicDir: 'public',
 }));
