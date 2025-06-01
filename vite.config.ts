@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/customer-experience-essentials-checklist/' : './',
+  base: mode === 'production' ? '/customer-experience-essentials-checklist/' : '/',
   server: {
     host: "::",
     port: 8080,
@@ -39,4 +39,13 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
+  experimental: {
+    renderBuiltUrl(filename, { hostType }) {
+      if (hostType === 'js') {
+        return { js: `./assets/${filename}` }
+      } else {
+        return { relative: true }
+      }
+    }
+  }
 }));

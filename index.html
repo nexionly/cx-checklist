@@ -19,25 +19,53 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loading fallback -->
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f9fafb; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="text-align: center;">
+          <div style="margin-bottom: 1rem;">
+            <div style="display: inline-block; width: 2rem; height: 2rem; border: 2px solid #e5e7eb; border-top: 2px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          </div>
+          <p style="color: #6b7280; font-size: 0.875rem;">Loading Customer Experience Checklist...</p>
+        </div>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    </div>
+    
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="./src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
     
     <!-- Debug script for GitHub Pages -->
     <script>
       console.log('GitHub Pages Debug - Current URL:', window.location.href);
       console.log('GitHub Pages Debug - Base URL:', document.baseURI);
+      console.log('GitHub Pages Debug - Protocol:', window.location.protocol);
+      console.log('GitHub Pages Debug - Host:', window.location.host);
+      console.log('GitHub Pages Debug - Pathname:', window.location.pathname);
       
       // Check if React app loads
       setTimeout(() => {
         const root = document.getElementById('root');
-        if (root && root.children.length === 0) {
-          console.error('React app failed to mount - root element is empty after 2 seconds');
+        if (root && root.children.length <= 1) {
+          console.error('React app failed to mount - root element is empty or only has loading fallback after 3 seconds');
+          console.log('Root element contents:', root.innerHTML);
         } else {
           console.log('React app appears to have mounted successfully');
         }
-      }, 2000);
+      }, 3000);
+
+      // Monitor for script loading errors
+      window.addEventListener('error', (event) => {
+        if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+          console.error('Failed to load resource:', event.target.src || event.target.href);
+        }
+      });
     </script>
   </body>
 </html>
