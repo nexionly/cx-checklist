@@ -4,20 +4,20 @@ import App from './App.tsx'
 import ErrorBoundary from './components/ErrorBoundary'
 import './index.css'
 
-// Enhanced debug logging for GitHub Pages
+// Enhanced debug logging
 console.log('Main.tsx loading - Environment details:');
 console.log('- Mode:', import.meta.env.MODE);
 console.log('- Base URL:', import.meta.env.BASE_URL);
 console.log('- Production:', import.meta.env.PROD);
 console.log('- Current location:', window.location.href);
 
-// Handle GitHub Pages SPA routing
+// GitHub Pages SPA routing fix
 if (window.location.search.includes('/?/')) {
   const url = window.location.search.slice(1) + window.location.hash;
   window.history.replaceState(null, '', url.substring(2).replace(/~and~/g, '&'));
 }
 
-// Enhanced fallback UI function
+// Enhanced fallback UI
 function createFallbackUI(error: string) {
   return `
     <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f9fafb; font-family: system-ui, -apple-system, sans-serif;">
@@ -29,14 +29,14 @@ function createFallbackUI(error: string) {
         </div>
         <h1 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-bottom: 1rem;">Application Error</h1>
         <p style="color: #6b7280; margin-bottom: 1.5rem; line-height: 1.5;">
-          The Customer Experience Checklist application failed to initialize. This might be due to a build or deployment issue.
+          The Customer Experience Checklist failed to initialize. This might be due to a build or deployment issue.
         </p>
         <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;">
           <button onclick="window.location.reload()" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: none; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: white; background-color: #2563eb; cursor: pointer;">
             Reload Page
           </button>
-          <button onclick="window.location.href = window.location.origin + window.location.pathname" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: #374151; background-color: white; cursor: pointer;">
-            Reset
+          <button onclick="window.location.href = window.location.origin + '/customer-experience-essentials-checklist/'" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: #374151; background-color: white; cursor: pointer;">
+            Reset to Home
           </button>
         </div>
         <details style="text-align: left;">
@@ -52,6 +52,11 @@ function createFallbackUI(error: string) {
       </div>
     </div>
   `;
+}
+
+// Performance tracking
+if (window.performance?.mark) {
+  window.performance.mark('app-init-start');
 }
 
 try {
@@ -74,10 +79,15 @@ try {
   
   console.log('✓ React app render initiated successfully');
   
-  // Verify mounting after a short delay
+  // Verify mounting
   setTimeout(() => {
     const appContent = rootElement.children.length;
     console.log(`App mounting check: ${appContent > 0 ? 'SUCCESS' : 'FAILED'} (${appContent} child elements)`);
+    
+    if (window.performance?.mark) {
+      window.performance.mark('app-init-complete');
+      window.performance.measure('app-init-duration', 'app-init-start', 'app-init-complete');
+    }
   }, 100);
   
 } catch (error) {
@@ -96,7 +106,6 @@ try {
 // Enhanced global error handling
 window.addEventListener('unhandledrejection', (event) => {
   console.error('❌ Unhandled promise rejection:', event.reason);
-  // Prevent the default browser behavior
   event.preventDefault();
 });
 
@@ -113,9 +122,4 @@ window.addEventListener('error', (event) => {
 // Network connectivity check
 if (navigator.onLine === false) {
   console.warn('⚠️ Application is offline - this may affect functionality');
-}
-
-// Performance monitoring
-if (window.performance && window.performance.mark) {
-  window.performance.mark('app-init-start');
 }

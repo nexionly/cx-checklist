@@ -8,9 +8,6 @@
     <meta name="description" content="Your actionable guide to building a high-performing CX team from the ground up" />
     <meta name="author" content="Lovable" />
     
-    <!-- Content Security Policy for GitHub Pages -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.gpteng.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https:;">
-    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./lovable-uploads/0df88fe6-f553-4e89-947f-9a9315c68ad3.png" />
     
@@ -23,7 +20,7 @@
 
   <body>
     <div id="root">
-      <!-- Enhanced loading fallback -->
+      <!-- Loading fallback -->
       <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f9fafb; font-family: system-ui, -apple-system, sans-serif;">
         <div style="text-align: center; max-width: 400px; padding: 2rem;">
           <div style="margin-bottom: 1.5rem;">
@@ -42,13 +39,18 @@
       </style>
     </div>
     
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Enhanced GitHub Pages debugging and error handling -->
+    <!-- Error handling and debugging -->
     <script>
-      // Update loading status
+      // Debug info
+      console.log('Environment Debug Info:');
+      console.log('- URL:', window.location.href);
+      console.log('- Base:', document.baseURI);
+      console.log('- Protocol:', window.location.protocol);
+      console.log('- Host:', window.location.host);
+      console.log('- Pathname:', window.location.pathname);
+      
       function updateLoadingStatus(message) {
         const statusEl = document.getElementById('loading-status');
         if (statusEl) {
@@ -56,85 +58,50 @@
         }
       }
 
-      // Enhanced debugging for GitHub Pages
-      console.log('GitHub Pages Debug Info:');
-      console.log('- Current URL:', window.location.href);
-      console.log('- Base URL:', document.baseURI);
-      console.log('- Protocol:', window.location.protocol);
-      console.log('- Host:', window.location.host);
-      console.log('- Pathname:', window.location.pathname);
-      console.log('- Environment Mode:', import.meta?.env?.MODE || 'unknown');
-      
-      updateLoadingStatus('Checking environment...');
+      updateLoadingStatus('Loading scripts...');
       
       // Monitor script loading
       const scripts = document.querySelectorAll('script[src]');
+      let loadedScripts = 0;
+      
       scripts.forEach((script, index) => {
         script.addEventListener('load', () => {
-          console.log(`✓ Script ${index + 1} loaded successfully:`, script.src);
-          updateLoadingStatus(`Loading scripts... (${index + 1}/${scripts.length})`);
+          loadedScripts++;
+          console.log(`✓ Script ${index + 1} loaded:`, script.src);
+          updateLoadingStatus(`Scripts loaded: ${loadedScripts}/${scripts.length}`);
         });
         
         script.addEventListener('error', (event) => {
-          console.error(`✗ Script ${index + 1} failed to load:`, script.src);
-          updateLoadingStatus(`Script loading error - check console`);
+          console.error(`✗ Script ${index + 1} failed:`, script.src);
+          updateLoadingStatus(`Script loading failed - check console`);
         });
       });
       
-      // Check React app mounting with timeout
+      // App mount timeout
       const mountTimeout = setTimeout(() => {
         const root = document.getElementById('root');
         if (root && root.children.length <= 1) {
-          console.error('React app mount timeout - app failed to load within 5 seconds');
-          updateLoadingStatus('Application failed to load - please refresh');
-          
-          // Show error state
-          root.innerHTML = `
-            <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #fef2f2; font-family: system-ui, -apple-system, sans-serif;">
-              <div style="text-align: center; max-width: 500px; padding: 2rem;">
-                <div style="margin-bottom: 1rem;">
-                  <svg style="margin: 0 auto; height: 4rem; width: 4rem; color: #ef4444;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                  </svg>
-                </div>
-                <h1 style="font-size: 1.5rem; font-weight: 600; color: #991b1b; margin-bottom: 1rem;">App Loading Failed</h1>
-                <p style="color: #7f1d1d; margin-bottom: 1.5rem;">
-                  The Customer Experience Checklist failed to load. This might be due to network issues or deployment problems.
-                </p>
-                <button onclick="window.location.reload()" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: none; font-size: 1rem; font-weight: 500; border-radius: 0.5rem; color: white; background-color: #dc2626; cursor: pointer; margin-right: 1rem;">
-                  Reload Page
-                </button>
-                <details style="margin-top: 2rem; text-align: left;">
-                  <summary style="cursor: pointer; font-weight: 500; color: #991b1b;">Technical Details</summary>
-                  <div style="margin-top: 1rem; padding: 1rem; background-color: #fee2e2; border-radius: 0.25rem; font-size: 0.875rem; color: #7f1d1d;">
-                    <p><strong>Current URL:</strong> ${window.location.href}</p>
-                    <p><strong>Base Path:</strong> ${document.baseURI}</p>
-                    <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
-                    <p style="margin-top: 0.5rem;"><em>Check the browser console for more detailed error information.</em></p>
-                  </div>
-                </details>
-              </div>
-            </div>
-          `;
-        } else {
-          console.log('✓ React app mounted successfully');
-          updateLoadingStatus('Application loaded successfully');
+          console.error('App mount timeout - failed to load within 10 seconds');
+          updateLoadingStatus('App failed to load - refreshing...');
+          setTimeout(() => window.location.reload(), 2000);
         }
-      }, 5000);
+      }, 10000);
 
-      // Clear timeout if app loads successfully
-      window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const root = document.getElementById('root');
-          if (root && root.children.length > 1) {
-            clearTimeout(mountTimeout);
-          }
-        }, 1000);
+      // Clear timeout when app loads
+      const observer = new MutationObserver((mutations) => {
+        const root = document.getElementById('root');
+        if (root && root.children.length > 1) {
+          clearTimeout(mountTimeout);
+          observer.disconnect();
+          console.log('✓ React app mounted successfully');
+        }
       });
 
-      // Enhanced error monitoring
+      observer.observe(document.getElementById('root'), { childList: true });
+
+      // Global error handling
       window.addEventListener('error', (event) => {
-        console.error('Global error caught:', {
+        console.error('Global error:', {
           message: event.message,
           filename: event.filename,
           lineno: event.lineno,
@@ -142,13 +109,11 @@
           error: event.error
         });
         
-        if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
-          console.error('Resource loading failed:', event.target.src || event.target.href);
-          updateLoadingStatus('Resource loading failed - check console');
+        if (event.target && event.target.tagName === 'SCRIPT') {
+          updateLoadingStatus('Script error - check console');
         }
       });
 
-      // Monitor unhandled promise rejections
       window.addEventListener('unhandledrejection', (event) => {
         console.error('Unhandled promise rejection:', event.reason);
         updateLoadingStatus('Application error - check console');

@@ -13,8 +13,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -23,26 +22,31 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false,
+    sourcemap: true,
     minify: 'esbuild',
     target: 'esnext',
     assetsDir: 'assets',
+    emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-dialog', '@radix-ui/react-toast'],
+        },
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name?.split('.') || [];
           const extType = info[info.length - 1];
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-            return `assets/images/[name].[hash][extname]`;
+            return `assets/images/[name]-[hash][extname]`;
           }
           if (/css/i.test(extType)) {
-            return `assets/css/[name].[hash][extname]`;
+            return `assets/css/[name]-[hash][extname]`;
           }
-          return `assets/[name].[hash][extname]`;
+          return `assets/[name]-[hash][extname]`;
         },
-        chunkFileNames: 'assets/js/[name].[hash].js',
-        entryFileNames: 'assets/js/[name].[hash].js',
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
       },
     },
   },
@@ -50,4 +54,8 @@ export default defineConfig(({ mode }) => ({
     logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
   publicDir: 'public',
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(mode),
+    __VITE_BASE_URL__: JSON.stringify(mode === 'production' ? '/customer-experience-essentials-checklist/' : '/'),
+  },
 }));
