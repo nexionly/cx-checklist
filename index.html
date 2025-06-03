@@ -8,8 +8,8 @@
     <meta name="description" content="Your actionable guide to building a high-performing CX team from the ground up" />
     <meta name="author" content="Lovable" />
     
-    <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;">
+    <!-- Strict Content Security Policy to block external scripts -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./lovable-uploads/0df88fe6-f553-4e89-947f-9a9315c68ad3.png" />
@@ -34,7 +34,6 @@
           </div>
           <h2 style="color: #1f2937; margin-bottom: 0.5rem; font-size: 1.25rem;">Loading Customer Experience Checklist...</h2>
           <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">Please wait while we prepare your comprehensive CX team building guide.</p>
-          <div id="loading-status" style="color: #9ca3af; font-size: 0.75rem;">Initializing application...</div>
         </div>
       </div>
       <style>
@@ -47,98 +46,26 @@
     
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Error handling and debugging -->
+    <!-- Minimal error handling -->
     <script>
       // Prevent external script injection
       const originalAppendChild = document.head.appendChild;
       document.head.appendChild = function(element) {
         if (element.tagName === 'SCRIPT' && element.src && !element.src.startsWith(window.location.origin)) {
-          console.warn('Blocked external script:', element.src);
           return element;
         }
         return originalAppendChild.call(this, element);
       };
 
-      // Debug info
-      console.log('Environment Debug Info:');
-      console.log('- URL:', window.location.href);
-      console.log('- Base:', document.baseURI);
-      console.log('- Protocol:', window.location.protocol);
-      console.log('- Host:', window.location.host);
-      console.log('- Pathname:', window.location.pathname);
-      
-      function updateLoadingStatus(message) {
-        const statusEl = document.getElementById('loading-status');
-        if (statusEl) {
-          statusEl.textContent = message;
-        }
-      }
-
-      updateLoadingStatus('Loading scripts...');
-      
-      // Monitor script loading
-      const scripts = document.querySelectorAll('script[src]');
-      let loadedScripts = 0;
-      
-      scripts.forEach((script, index) => {
-        script.addEventListener('load', () => {
-          loadedScripts++;
-          console.log(`✓ Script ${index + 1} loaded:`, script.src);
-          updateLoadingStatus(`Scripts loaded: ${loadedScripts}/${scripts.length}`);
-        });
-        
-        script.addEventListener('error', (event) => {
-          console.error(`✗ Script ${index + 1} failed:`, script.src);
-          updateLoadingStatus(`Script loading failed - will retry...`);
-          
-          // Retry with absolute path
-          const newScript = document.createElement('script');
-          newScript.type = 'module';
-          newScript.src = '/cx-checklist/src/main.tsx';
-          document.head.appendChild(newScript);
-        });
-      });
-      
-      // App mount timeout
-      const mountTimeout = setTimeout(() => {
-        const root = document.getElementById('root');
-        if (root && root.children.length <= 1) {
-          console.error('App mount timeout - failed to load within 15 seconds');
-          updateLoadingStatus('App failed to load - refreshing...');
-          setTimeout(() => window.location.reload(), 2000);
-        }
-      }, 15000);
-
-      // Clear timeout when app loads
-      const observer = new MutationObserver((mutations) => {
-        const root = document.getElementById('root');
-        if (root && root.children.length > 1) {
-          clearTimeout(mountTimeout);
-          observer.disconnect();
-          console.log('✓ React app mounted successfully');
-        }
-      });
-
-      observer.observe(document.getElementById('root'), { childList: true });
-
-      // Global error handling
+      // Silent error handling
       window.addEventListener('error', (event) => {
-        console.error('Global error:', {
-          message: event.message,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          error: event.error
-        });
-        
         if (event.target && event.target.tagName === 'SCRIPT') {
-          updateLoadingStatus('Script error - check console');
+          event.preventDefault();
         }
       });
 
       window.addEventListener('unhandledrejection', (event) => {
-        console.error('Unhandled promise rejection:', event.reason);
-        updateLoadingStatus('Application error - check console');
+        event.preventDefault();
       });
     </script>
   </body>

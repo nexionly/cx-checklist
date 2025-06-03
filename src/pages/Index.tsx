@@ -18,15 +18,15 @@ const Index = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      const savedChecklist = localStorage.getItem('cx-checklist');
-      if (savedChecklist) {
-        try {
+      try {
+        const savedChecklist = localStorage.getItem('cx-checklist');
+        if (savedChecklist) {
           setChecklist(JSON.parse(savedChecklist));
-        } catch (e) {
-          console.error('Error parsing saved checklist', e);
+        } else {
           setChecklist(initialChecklist);
         }
-      } else {
+      } catch (e) {
+        // Silent fallback to initial checklist
         setChecklist(initialChecklist);
       }
       setLoading(false);
@@ -49,12 +49,22 @@ const Index = () => {
     };
 
     setChecklist(updatedChecklist);
-    localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
+    
+    try {
+      localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
+    } catch (e) {
+      // Silent failure - functionality continues without persistence
+    }
   };
 
   const handleSave = () => {
     if (!checklist) return;
-    localStorage.setItem('cx-checklist', JSON.stringify(checklist));
+    
+    try {
+      localStorage.setItem('cx-checklist', JSON.stringify(checklist));
+    } catch (e) {
+      // Silent failure
+    }
   };
   
   const handleUncheckAll = (categoryId: string) => {
@@ -77,7 +87,12 @@ const Index = () => {
     };
     
     setChecklist(updatedChecklist);
-    localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
+    
+    try {
+      localStorage.setItem('cx-checklist', JSON.stringify(updatedChecklist));
+    } catch (e) {
+      // Silent failure
+    }
     
     toast({
       title: "Items unchecked",

@@ -21,7 +21,10 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Only log in development
+    if (import.meta.env.DEV) {
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
     this.setState({ errorInfo });
   }
 
@@ -53,7 +56,7 @@ class ErrorBoundary extends Component<Props, State> {
                 Reset to Home
               </button>
             </div>
-            {this.state.error && (
+            {this.state.error && import.meta.env.DEV && (
               <details className="mt-4 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 mb-2">Technical Details</summary>
                 <div className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-40">
