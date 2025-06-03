@@ -47,7 +47,7 @@ class ErrorBoundary extends Component<Props, State> {
                 Reload Page
               </button>
               <button
-                onClick={() => window.location.href = window.location.origin + '/customer-experience-essentials-checklist/'}
+                onClick={() => window.location.href = '/cx-checklist/'}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Reset to Home
@@ -59,6 +59,12 @@ class ErrorBoundary extends Component<Props, State> {
                 <div className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-40">
                   <div className="mb-2">
                     <strong>Error:</strong> {this.state.error.toString()}
+                  </div>
+                  <div className="mb-2">
+                    <strong>URL:</strong> {window.location.href}
+                  </div>
+                  <div className="mb-2">
+                    <strong>Expected Path:</strong> /cx-checklist/
                   </div>
                   {this.state.error.stack && (
                     <div className="mb-2">

@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/customer-experience-essentials-checklist/' : '/',
+  base: '/cx-checklist/',
   server: {
     host: "::",
     port: 8080,
@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     minify: 'esbuild',
     target: 'esnext',
     assetsDir: 'assets',
@@ -56,6 +56,6 @@ export default defineConfig(({ mode }) => ({
   publicDir: 'public',
   define: {
     'process.env.NODE_ENV': JSON.stringify(mode),
-    __VITE_BASE_URL__: JSON.stringify(mode === 'production' ? '/customer-experience-essentials-checklist/' : '/'),
+    __VITE_BASE_URL__: JSON.stringify('/cx-checklist/'),
   },
 }));

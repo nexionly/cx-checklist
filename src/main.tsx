@@ -11,10 +11,10 @@ console.log('- Base URL:', import.meta.env.BASE_URL);
 console.log('- Production:', import.meta.env.PROD);
 console.log('- Current location:', window.location.href);
 
-// GitHub Pages SPA routing fix
-if (window.location.search.includes('/?/')) {
-  const url = window.location.search.slice(1) + window.location.hash;
-  window.history.replaceState(null, '', url.substring(2).replace(/~and~/g, '&'));
+// Custom domain path handling
+const currentPath = window.location.pathname;
+if (currentPath === '/cx-checklist' && !currentPath.endsWith('/')) {
+  window.history.replaceState(null, '', '/cx-checklist/');
 }
 
 // Enhanced fallback UI
@@ -35,7 +35,7 @@ function createFallbackUI(error: string) {
           <button onclick="window.location.reload()" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: none; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: white; background-color: #2563eb; cursor: pointer;">
             Reload Page
           </button>
-          <button onclick="window.location.href = window.location.origin + '/customer-experience-essentials-checklist/'" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: #374151; background-color: white; cursor: pointer;">
+          <button onclick="window.location.href = '/cx-checklist/'" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: #374151; background-color: white; cursor: pointer;">
             Reset to Home
           </button>
         </div>
@@ -45,7 +45,7 @@ function createFallbackUI(error: string) {
             <div><strong>Error:</strong> ${error}</div>
             <div><strong>URL:</strong> ${window.location.href}</div>
             <div><strong>Base:</strong> ${document.baseURI}</div>
-            <div><strong>User Agent:</strong> ${navigator.userAgent.substring(0, 100)}...</div>
+            <div><strong>Expected Path:</strong> /cx-checklist/</div>
             <div style="margin-top: 0.5rem;"><em>Check the browser console (F12) for additional error details.</em></div>
           </div>
         </details>
