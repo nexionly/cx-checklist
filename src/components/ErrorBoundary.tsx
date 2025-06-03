@@ -21,10 +21,6 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Only log in development
-    if (import.meta.env.DEV) {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
-    }
     this.setState({ errorInfo });
   }
 
@@ -42,48 +38,12 @@ class ErrorBoundary extends Component<Props, State> {
             <p className="text-gray-600 mb-4">
               Something went wrong while loading the Customer Experience Checklist.
             </p>
-            <div className="flex gap-2 justify-center mb-4">
-              <button
-                onClick={() => window.location.reload()}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Reload Page
-              </button>
-              <button
-                onClick={() => window.location.href = '/cx-checklist/'}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Reset to Home
-              </button>
-            </div>
-            {this.state.error && import.meta.env.DEV && (
-              <details className="mt-4 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500 mb-2">Technical Details</summary>
-                <div className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-40">
-                  <div className="mb-2">
-                    <strong>Error:</strong> {this.state.error.toString()}
-                  </div>
-                  <div className="mb-2">
-                    <strong>URL:</strong> {window.location.href}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Expected Path:</strong> /cx-checklist/
-                  </div>
-                  {this.state.error.stack && (
-                    <div className="mb-2">
-                      <strong>Stack:</strong>
-                      <pre className="mt-1 whitespace-pre-wrap">{this.state.error.stack}</pre>
-                    </div>
-                  )}
-                  {this.state.errorInfo && (
-                    <div>
-                      <strong>Component Stack:</strong>
-                      <pre className="mt-1 whitespace-pre-wrap">{this.state.errorInfo.componentStack}</pre>
-                    </div>
-                  )}
-                </div>
-              </details>
-            )}
+            <button
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Reload Page
+            </button>
           </div>
         </div>
       );

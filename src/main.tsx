@@ -4,12 +4,6 @@ import App from './App.tsx'
 import ErrorBoundary from './components/ErrorBoundary'
 import './index.css'
 
-// Custom domain path handling
-const currentPath = window.location.pathname;
-if (currentPath === '/cx-checklist' && !currentPath.endsWith('/')) {
-  window.history.replaceState(null, '', '/cx-checklist/');
-}
-
 // Enhanced fallback UI
 function createFallbackUI(error: string) {
   return `
@@ -27,9 +21,6 @@ function createFallbackUI(error: string) {
         <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;">
           <button onclick="window.location.reload()" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: none; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: white; background-color: #2563eb; cursor: pointer;">
             Reload Page
-          </button>
-          <button onclick="window.location.href = '/cx-checklist/'" style="display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; color: #374151; background-color: white; cursor: pointer;">
-            Reset to Home
           </button>
         </div>
       </div>
@@ -53,32 +44,8 @@ try {
   );
   
 } catch (error) {
-  // Only log critical errors
-  if (import.meta.env.DEV) {
-    console.error('Critical error during React app initialization:', error);
-  }
-  
   const rootElement = document.getElementById("root");
   if (rootElement) {
     rootElement.innerHTML = createFallbackUI(error instanceof Error ? error.message : String(error));
   }
 }
-
-// Silent error handling
-window.addEventListener('unhandledrejection', (event) => {
-  if (import.meta.env.DEV) {
-    console.error('Unhandled promise rejection:', event.reason);
-  }
-  event.preventDefault();
-});
-
-window.addEventListener('error', (event) => {
-  // Only log in development or for critical errors
-  if (import.meta.env.DEV || event.message.includes('Critical')) {
-    console.error('Global error:', {
-      message: event.message,
-      filename: event.filename,
-      error: event.error
-    });
-  }
-});
